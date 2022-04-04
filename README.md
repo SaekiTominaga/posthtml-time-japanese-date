@@ -1,6 +1,6 @@
 # posthtml-time-japanese-date
 
-[![npm version](https://badge.fury.io/js/%40saekitominaga%2Fposthtml-time-japanese-date.svg)](https://badge.fury.io/js/%40saekitominaga%2Fposthtml-time-japanese-date)
+[![npm version](https://badge.fury.io/js/posthtml-time-japanese-date.svg)](https://badge.fury.io/js/posthtml-time-japanese-date)
 [![Build Status](https://app.travis-ci.com/SaekiTominaga/posthtml-time-japanese-date.svg?branch=main)](https://app.travis-ci.com/SaekiTominaga/posthtml-time-japanese-date)
 [![Coverage Status](https://coveralls.io/repos/github/SaekiTominaga/posthtml-time-japanese-date/badge.svg)](https://coveralls.io/github/SaekiTominaga/posthtml-time-japanese-date)
 
