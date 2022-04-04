@@ -22,8 +22,9 @@ export default (options) => {
                     /* 当該クラス名のない要素 e.g. { tag: 'span', class: 'japanese-time' } / <span class="foo">foo</span> */
                     return node;
                 }
-                /* クラス名を除去した上で変換する */
-                attrs.class = classList.filter((className) => className !== options.class).join(CLASS_SEPARATOR);
+                /* 指定されたクラス名を除去した上で変換する */
+                const newClassList = classList.filter((className) => className !== options.class && className !== '');
+                attrs.class = newClassList.length >= 1 ? newClassList.join(CLASS_SEPARATOR) : undefined;
             }
             const contentString = content.toString();
             /* e.g. 2000年1月1日 */

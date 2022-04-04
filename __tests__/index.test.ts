@@ -64,7 +64,19 @@ describe('変換しない', () => {
 describe('class指定', () => {
 	test('年月日', async () => {
 		expect(
-			(await posthtml([posthtmlTimeJapaneseDate({ tag: 'span', class: 'japanese-date' })]).process('<!DOCTYPE html><span>2022年1月2日</span><span class="foo bar">2022年1月2日</span><span class="foo japanese-date bar">2022年1月2日</span>')).html
-			).toBe('<!DOCTYPE html><span>2022年1月2日</span><span class="foo bar">2022年1月2日</span><time class="foo bar" datetime="2022-01-02">2022年1月2日</time>');
+			(await posthtml([posthtmlTimeJapaneseDate({ tag: 'span', class: 'japanese-date' })]).process(`<!DOCTYPE html>
+			<span>2022年1月2日</span>
+			<span class="foo bar">2022年1月2日</span>
+			<span class="japanese-date">2022年1月2日</span>
+			<span class=" japanese-date ">2022年1月2日</span>
+			<span class=" foo  japanese-date  bar ">2022年1月2日</span>
+			<span class="foo japanese-date bar">2022年1月2日</span>`)).html
+			).toBe(`<!DOCTYPE html>
+			<span>2022年1月2日</span>
+			<span class="foo bar">2022年1月2日</span>
+			<time datetime="2022-01-02">2022年1月2日</time>
+			<time datetime="2022-01-02">2022年1月2日</time>
+			<time class="foo bar" datetime="2022-01-02">2022年1月2日</time>
+			<time class="foo bar" datetime="2022-01-02">2022年1月2日</time>`);
 	});
 });

@@ -33,8 +33,9 @@ export default (options: Options) => {
 					return node;
 				}
 
-				/* クラス名を除去した上で変換する */
-				attrs.class = classList.filter((className) => className !== options.class).join(CLASS_SEPARATOR);
+				/* 指定されたクラス名を除去した上で変換する */
+				const newClassList = classList.filter((className) => className !== options.class && className !== '');
+				attrs.class = newClassList.length >= 1 ? newClassList.join(CLASS_SEPARATOR) : undefined;
 			}
 
 			const contentString = content.toString();

@@ -18,10 +18,13 @@ Before:
 <p><x-japanese-date>2022年</x-japanese-date></p>
 <p><x-japanese-date lang="ja"> 2022 年 1 月 2 日 </x-japanese-date></p>
 
-<p><x-japanese-date>2022年123月2日</x-japanese-date></p><!-- Incorrect format (not converted) -->
-<p><x-japanese-date datetime="2022-01-02">2022年1月2日</x-japanese-date></p><!-- Do not include the `datetime` attribute (not converted) -->
+<!-- ↓ not converted -->
+<p><x-japanese-date>2022年123月2日</x-japanese-date></p><!-- Incorrect format -->
+<p><x-japanese-date datetime="2022-01-02">2022年1月2日</x-japanese-date></p><!-- Do not include the `datetime` attribute -->
 
-<p><span class="foo japanese-date bar">2022年1月2日</span></p><!-- It is possible to set the conversion to occur only when a specific class name is included -->
+<!-- ↓ It is possible to set the conversion to occur only when a specific class name is included -->
+<p><span class="japanese-date">2022年1月2日</span></p>
+<p><span class="foo japanese-date bar">2022年1月2日</span></p>
 ```
 
 After:
@@ -37,6 +40,7 @@ After:
 <p><x-japanese-date>2022年123月2日</x-japanese-date></p>
 <p><x-japanese-date datetime="2022-01-02">2022年1月2日</x-japanese-date></p>
 
+<p><time datetime="2022-01-02">2022年1月2日</time></p>
 <p><time class="foo bar" datetime="2022-01-02">2022年1月2日</time></p>
 ```
 
