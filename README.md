@@ -46,9 +46,6 @@ npm i -D posthtml-time-japanese-date
 
 ## Usage
 
-Describe how people can use this plugin. Include info about build systems if it's
-necessary.
-
 ``` js
 import posthtml from 'posthtml';
 import posthtmlTimeJapaneseDate from 'posthtml-time-japanese-date';
