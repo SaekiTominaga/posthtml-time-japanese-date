@@ -28,12 +28,9 @@ export default (options) => {
             }
             const contentString = content.toString();
             /* e.g. 2000年1月1日 */
-            const patternMatchYMD = contentString.match(/^([\s]*?)(\d{4})([\s]*?)年([\s]*?)(\d{1,2})([\s]*?)月([\s]*?)(\d{1,2})([\s]*?)日([\s]*?)$/);
-            if (patternMatchYMD !== null) {
-                const year = patternMatchYMD[2];
-                const month = patternMatchYMD[5];
-                const day = patternMatchYMD[8];
-                attrs.datetime = `${year}-${`0${month}`.slice(-2)}-${`0${day}`.slice(-2)}`;
+            const patternMatchYMDgroups = contentString.match(/^(?:[\s]*?)(?<year>\d{4})(?:[\s]*?)年(?:[\s]*?)(?<month>\d{1,2})(?:[\s]*?)月(?:[\s]*?)(?<day>\d{1,2})(?:[\s]*?)日(?:[\s]*?)$/)?.groups;
+            if (patternMatchYMDgroups !== undefined) {
+                attrs.datetime = `${patternMatchYMDgroups.year}-${`0${patternMatchYMDgroups.month}`.slice(-2)}-${`0${patternMatchYMDgroups.day}`.slice(-2)}`;
                 return {
                     tag: 'time',
                     attrs: attrs,
@@ -41,11 +38,9 @@ export default (options) => {
                 };
             }
             /* e.g. 2000年1月 */
-            const patternMatchYM = contentString.match(/^([\s]*?)(\d{4})([\s]*?)年([\s]*?)(\d{1,2})([\s]*?)月([\s]*?)$/);
-            if (patternMatchYM !== null) {
-                const year = patternMatchYM[2];
-                const month = patternMatchYM[5];
-                attrs.datetime = `${year}-${`0${month}`.slice(-2)}`;
+            const patternMatchYMgroups = contentString.match(/^(?:[\s]*?)(?<year>\d{4})(?:[\s]*?)年(?:[\s]*?)(?<month>\d{1,2})(?:[\s]*?)月(?:[\s]*?)$/)?.groups;
+            if (patternMatchYMgroups !== undefined) {
+                attrs.datetime = `${patternMatchYMgroups.year}-${`0${patternMatchYMgroups.month}`.slice(-2)}`;
                 return {
                     tag: 'time',
                     attrs: attrs,
@@ -53,10 +48,9 @@ export default (options) => {
                 };
             }
             /* e.g. 2000年 */
-            const patternMatchY = contentString.match(/^([\s]*?)(\d{4})([\s]*?)年([\s]*?)$/);
-            if (patternMatchY !== null) {
-                const year = patternMatchY[2];
-                attrs.datetime = year;
+            const patternMatchYgroups = contentString.match(/^(?:[\s]*?)(?<year>\d{4})(?:[\s]*?)年(?:[\s]*?)$/)?.groups;
+            if (patternMatchYgroups !== undefined) {
+                attrs.datetime = patternMatchYgroups.year;
                 return {
                     tag: 'time',
                     attrs: attrs,
