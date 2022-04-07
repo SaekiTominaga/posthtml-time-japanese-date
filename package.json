@@ -1,7 +1,7 @@
 {
 	"name": "posthtml-time-japanese-date",
 	"version": "1.0.1",
-	"description": "PostHTML plugin description",
+	"description": "Transform Japanese date notation to <time> element using PostHTML",
 	"keywords": [
 		"html",
 		"posthtml",
