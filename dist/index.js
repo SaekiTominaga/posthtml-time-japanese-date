@@ -30,7 +30,7 @@ export default (options) => {
             /* e.g. 2000年1月1日 */
             const patternMatchYMDgroups = contentString.match(/^(?:[\s]*?)(?<year>\d{4})(?:[\s]*?)年(?:[\s]*?)(?<month>\d{1,2})(?:[\s]*?)月(?:[\s]*?)(?<day>\d{1,2})(?:[\s]*?)日(?:[\s]*?)$/)?.groups;
             if (patternMatchYMDgroups !== undefined) {
-                attrs.datetime = `${patternMatchYMDgroups.year}-${`0${patternMatchYMDgroups.month}`.slice(-2)}-${`0${patternMatchYMDgroups.day}`.slice(-2)}`;
+                attrs.datetime = `${patternMatchYMDgroups.year}-${patternMatchYMDgroups.month?.padStart(2, '0')}-${patternMatchYMDgroups.day?.padStart(2, '0')}`;
                 return {
                     tag: 'time',
                     attrs: attrs,
@@ -40,7 +40,7 @@ export default (options) => {
             /* e.g. 2000年1月 */
             const patternMatchYMgroups = contentString.match(/^(?:[\s]*?)(?<year>\d{4})(?:[\s]*?)年(?:[\s]*?)(?<month>\d{1,2})(?:[\s]*?)月(?:[\s]*?)$/)?.groups;
             if (patternMatchYMgroups !== undefined) {
-                attrs.datetime = `${patternMatchYMgroups.year}-${`0${patternMatchYMgroups.month}`.slice(-2)}`;
+                attrs.datetime = `${patternMatchYMgroups.year}-${patternMatchYMgroups.month?.padStart(2, '0')}`;
                 return {
                     tag: 'time',
                     attrs: attrs,
