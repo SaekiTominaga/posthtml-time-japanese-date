@@ -7,14 +7,6 @@ export default (options) => {
         tree.match({ tag: targetElementInfo.element }, (node) => {
             const content = node.content;
             const attrs = node.attrs ?? {};
-            if (content === undefined) {
-                console.warn('Element content is empty', node);
-                return node;
-            }
-            if (attrs.datetime !== undefined) {
-                console.warn('`datetime` attribute already exists', node);
-                return node;
-            }
             if (targetElementInfo.class !== undefined && targetElementInfo.class !== '') {
                 const CLASS_SEPARATOR = ' ';
                 const classList = attrs.class?.split(CLASS_SEPARATOR);
@@ -29,6 +21,14 @@ export default (options) => {
                 /* 指定されたクラス名を除去した上で変換する */
                 const newClassList = classList.filter((className) => className !== targetElementInfo.class && className !== '');
                 attrs.class = newClassList.length >= 1 ? newClassList.join(CLASS_SEPARATOR) : undefined;
+            }
+            if (content === undefined) {
+                console.warn('Element content is empty', node);
+                return node;
+            }
+            if (attrs.datetime !== undefined) {
+                console.warn('`datetime` attribute already exists', node);
+                return node;
             }
             const contentString = content.toString();
             /* e.g. 2000年1月1日 */
