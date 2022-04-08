@@ -53,7 +53,7 @@ import posthtmlTimeJapaneseDate from 'posthtml-time-japanese-date';
 const beforeHtml = '<!DOCTYPE html>...';
 
 const result = posthtml([
-	posthtmlTimeJapaneseDate({ tag: 'x-japanese-date' })
+	posthtmlTimeJapaneseDate({ element: 'x-japanese-date' })
 ]).process(beforeHtml);
 
 const afterHtml = result.html;
@@ -62,10 +62,10 @@ const afterHtml = result.html;
 ## Options
 
 <dl>
-<dt><code>tag</code> [Required]</dt>
+<dt><code>element</code> [Required]</dt>
 <dd>Element name</dd>
 <dt><code>class</code> [Optional]</dt>
 <dd>Class name</dd>
 </dl>
 
-e.g. `{ tag: 'x-japanese-date' }`, `{ tag: 'span', class: 'japanese-date' }`
+e.g. `{ element: 'x-japanese-date' }`, `{ element: 'span', class: 'japanese-date' }`

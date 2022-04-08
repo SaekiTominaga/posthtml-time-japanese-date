@@ -1,6 +1,10 @@
 export default (options) => {
+    const targetElementInfo = {
+        element: options.element,
+        class: options.class,
+    };
     return (tree) => {
-        tree.match({ tag: options.tag }, (node) => {
+        tree.match({ tag: targetElementInfo.element }, (node) => {
             const content = node.content;
             const attrs = node.attrs ?? {};
             if (content === undefined) {
@@ -11,19 +15,19 @@ export default (options) => {
                 console.warn('`datetime` attribute already exists', node);
                 return node;
             }
-            if (options.class !== undefined && options.class !== '') {
+            if (targetElementInfo.class !== undefined && targetElementInfo.class !== '') {
                 const CLASS_SEPARATOR = ' ';
                 const classList = attrs.class?.split(CLASS_SEPARATOR);
                 if (classList === undefined) {
                     /* class 属性なしの要素 e.g. { tag: 'span', class: 'japanese-time' } / <span>foo</span> */
                     return node;
                 }
-                if (!classList.includes(options.class)) {
+                if (!classList.includes(targetElementInfo.class)) {
                     /* 当該クラス名のない要素 e.g. { tag: 'span', class: 'japanese-time' } / <span class="foo">foo</span> */
                     return node;
                 }
                 /* 指定されたクラス名を除去した上で変換する */
-                const newClassList = classList.filter((className) => className !== options.class && className !== '');
+                const newClassList = classList.filter((className) => className !== targetElementInfo.class && className !== '');
                 attrs.class = newClassList.length >= 1 ? newClassList.join(CLASS_SEPARATOR) : undefined;
             }
             const contentString = content.toString();

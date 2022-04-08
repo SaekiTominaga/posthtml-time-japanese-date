@@ -1,13 +1,18 @@
 import { Node } from 'posthtml';
 
 interface Options {
-	tag: string;
-	class?: string;
+	readonly element: string;
+	readonly class?: string;
 }
 
 export default (options: Options) => {
+	const targetElementInfo = {
+		element: options.element,
+		class: options.class,
+	};
+
 	return (tree: Node): Node => {
-		tree.match({ tag: options.tag }, (node) => {
+		tree.match({ tag: targetElementInfo.element }, (node) => {
 			const content = node.content;
 			const attrs = node.attrs ?? {};
 
@@ -20,7 +25,7 @@ export default (options: Options) => {
 				return node;
 			}
 
-			if (options.class !== undefined && options.class !== '') {
+			if (targetElementInfo.class !== undefined && targetElementInfo.class !== '') {
 				const CLASS_SEPARATOR = ' ';
 
 				const classList = attrs.class?.split(CLASS_SEPARATOR);
@@ -28,13 +33,13 @@ export default (options: Options) => {
 					/* class 属性なしの要素 e.g. { tag: 'span', class: 'japanese-time' } / <span>foo</span> */
 					return node;
 				}
-				if (!classList.includes(options.class)) {
+				if (!classList.includes(targetElementInfo.class)) {
 					/* 当該クラス名のない要素 e.g. { tag: 'span', class: 'japanese-time' } / <span class="foo">foo</span> */
 					return node;
 				}
 
 				/* 指定されたクラス名を除去した上で変換する */
-				const newClassList = classList.filter((className) => className !== options.class && className !== '');
+				const newClassList = classList.filter((className) => className !== targetElementInfo.class && className !== '');
 				attrs.class = newClassList.length >= 1 ? newClassList.join(CLASS_SEPARATOR) : undefined;
 			}
 
