@@ -83,7 +83,7 @@ export default (options: Options) => {
 				};
 			}
 
-			console.warn('`datetime` attribute already exists', node);
+			console.warn('Does not match the specified Japanese date string format', node);
 			return node;
 		});
 
