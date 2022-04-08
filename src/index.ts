@@ -17,7 +17,7 @@ export default (options: Options) => {
 			const attrs = node.attrs ?? {};
 
 			if (content === undefined) {
-				console.warn('Element content is empty.', node);
+				console.warn('Element content is empty', node);
 				return node;
 			}
 			if (attrs.datetime !== undefined) {
