@@ -16,6 +16,7 @@ export default (options: Options) => {
 			const content = node.content;
 			const attrs = node.attrs ?? {};
 
+			let newClass = attrs.class;
 			if (targetElementInfo.class !== undefined && targetElementInfo.class !== '') {
 				const CLASS_SEPARATOR = ' ';
 
@@ -31,7 +32,7 @@ export default (options: Options) => {
 
 				/* 指定されたクラス名を除去した上で変換する */
 				const newClassList = classList.filter((className) => className !== targetElementInfo.class && className !== '');
-				attrs.class = newClassList.length >= 1 ? newClassList.join(CLASS_SEPARATOR) : undefined;
+				newClass = newClassList.length >= 1 ? newClassList.join(CLASS_SEPARATOR) : undefined;
 			}
 
 			if (content === undefined) {
@@ -51,6 +52,7 @@ export default (options: Options) => {
 			)?.groups;
 			if (patternMatchYMDgroups !== undefined) {
 				attrs.datetime = `${patternMatchYMDgroups.year}-${patternMatchYMDgroups.month?.padStart(2, '0')}-${patternMatchYMDgroups.day?.padStart(2, '0')}`;
+				attrs.class = newClass;
 
 				return {
 					tag: 'time',
@@ -63,6 +65,7 @@ export default (options: Options) => {
 			const patternMatchYMgroups = contentString.match(/^(?:[\s]*?)(?<year>\d{4})(?:[\s]*?)年(?:[\s]*?)(?<month>\d{1,2})(?:[\s]*?)月(?:[\s]*?)$/)?.groups;
 			if (patternMatchYMgroups !== undefined) {
 				attrs.datetime = `${patternMatchYMgroups.year}-${patternMatchYMgroups.month?.padStart(2, '0')}`;
+				attrs.class = newClass;
 
 				return {
 					tag: 'time',
@@ -75,6 +78,7 @@ export default (options: Options) => {
 			const patternMatchYgroups = contentString.match(/^(?:[\s]*?)(?<year>\d{4})(?:[\s]*?)年(?:[\s]*?)$/)?.groups;
 			if (patternMatchYgroups !== undefined) {
 				attrs.datetime = patternMatchYgroups.year;
+				attrs.class = newClass;
 
 				return {
 					tag: 'time',
