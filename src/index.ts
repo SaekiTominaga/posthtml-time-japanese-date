@@ -1,4 +1,4 @@
-import { Node } from 'posthtml';
+import * as PostHTML from 'posthtml';
 
 interface Options {
 	readonly element: string;
@@ -11,28 +11,49 @@ export default (options: Options) => {
 		class: options.class,
 	};
 
-	return (tree: Node): Node => {
+	/**
+	 * Narrowing by class name
+	 *
+	 * <p class="foo bar"> → <p class="foo bar"> (return false)
+	 * <p class="foo TARGET bar"> → <p class="foo bar"> (return true)
+	 *
+	 * @param {object} node - Target node
+	 * @param {string} targetClassName - Searches if the target node contains this class name
+	 *
+	 * @returns {boolean} Whether the target node contains the specified class name
+	 */
+	const narrowingClass = (node: PostHTML.Node, targetClassName?: string): boolean => {
+		if (targetClassName === undefined) {
+			return true;
+		}
+
+		const attrs = node.attrs;
+
+		if (attrs?.class === undefined) {
+			/* class 属性がない場合 */
+			return false;
+		}
+
+		const classList = attrs.class.trim().split(/[\t\n\f\r ]+/g);
+		if (!classList.includes(targetClassName)) {
+			/* 当該クラス名がない場合 */
+			return false;
+		}
+
+		/* 指定されたクラス名を除去した上で変換する */
+		const newClass = classList.filter((className) => className !== targetClassName && className !== '').join(' ');
+		attrs.class = newClass !== '' ? newClass : undefined;
+
+		return true;
+	};
+
+	return (tree: PostHTML.Node): PostHTML.Node => {
 		tree.match({ tag: targetElementInfo.element }, (node) => {
 			const content = node.content;
 			const attrs = node.attrs ?? {};
 
-			let newClass = attrs.class;
-			if (targetElementInfo.class !== undefined && targetElementInfo.class !== '') {
-				const CLASS_SEPARATOR = ' ';
-
-				const classList = attrs.class?.split(CLASS_SEPARATOR);
-				if (classList === undefined) {
-					/* class 属性なしの要素 e.g. { tag: 'span', class: 'japanese-time' } / <span>foo</span> */
-					return node;
-				}
-				if (!classList.includes(targetElementInfo.class)) {
-					/* 当該クラス名のない要素 e.g. { tag: 'span', class: 'japanese-time' } / <span class="foo">foo</span> */
-					return node;
-				}
-
-				/* 指定されたクラス名を除去した上で変換する */
-				const newClassList = classList.filter((className) => className !== targetElementInfo.class && className !== '');
-				newClass = newClassList.length >= 1 ? newClassList.join(CLASS_SEPARATOR) : undefined;
+			if (!narrowingClass(node, targetElementInfo.class)) {
+				return node;
 			}
 
 			if (content === undefined) {
@@ -52,7 +73,6 @@ export default (options: Options) => {
 			)?.groups;
 			if (patternMatchYMDgroups !== undefined) {
 				attrs.datetime = `${patternMatchYMDgroups.year}-${patternMatchYMDgroups.month?.padStart(2, '0')}-${patternMatchYMDgroups.day?.padStart(2, '0')}`;
-				attrs.class = newClass;
 
 				return {
 					tag: 'time',
@@ -65,7 +85,6 @@ export default (options: Options) => {
 			const patternMatchYMgroups = contentString.match(/^(?:[\s]*?)(?<year>\d{4})(?:[\s]*?)年(?:[\s]*?)(?<month>\d{1,2})(?:[\s]*?)月(?:[\s]*?)$/)?.groups;
 			if (patternMatchYMgroups !== undefined) {
 				attrs.datetime = `${patternMatchYMgroups.year}-${patternMatchYMgroups.month?.padStart(2, '0')}`;
-				attrs.class = newClass;
 
 				return {
 					tag: 'time',
@@ -78,7 +97,6 @@ export default (options: Options) => {
 			const patternMatchYgroups = contentString.match(/^(?:[\s]*?)(?<year>\d{4})(?:[\s]*?)年(?:[\s]*?)$/)?.groups;
 			if (patternMatchYgroups !== undefined) {
 				attrs.datetime = patternMatchYgroups.year;
-				attrs.class = newClass;
 
 				return {
 					tag: 'time',
