@@ -130,24 +130,6 @@ describe('正常系・class指定', () => {
 			).html
 		).toBe('<time lang="ja" datetime="2022-01-02">2022年1月2日</time>');
 	});
-	test('クラス名のパターン', async () => {
-		expect(
-			(
-				await posthtml([posthtmlTimeJapaneseDate({ element: 'span', class: 'japanese-date' })]).process(`
-					<span>2022年1月2日</span>
-					<span class="foo bar">2022年1月2日</span>
-					<span class=" japanese-date ">2022年1月2日</span>
-					<span class=" foo
-					japanese-date	bar ">2022年1月2日</span>
-					<span class="foo japanese-date bar">2022年1月2日</span>`)
-			).html
-		).toBe(`
-					<span>2022年1月2日</span>
-					<span class="foo bar">2022年1月2日</span>
-					<time datetime="2022-01-02">2022年1月2日</time>
-					<time class="foo bar" datetime="2022-01-02">2022年1月2日</time>
-					<time class="foo bar" datetime="2022-01-02">2022年1月2日</time>`);
-	});
 });
 
 describe('変換しない', () => {
@@ -173,6 +155,17 @@ describe('変換しない', () => {
 });
 
 describe('変換しない・class指定', () => {
+	test('クラス名マッチしない', async () => {
+		expect(
+			(
+				await posthtml([posthtmlTimeJapaneseDate({ element: 'span', class: 'japanese-date' })]).process(`
+					<span>2022年1月2日</span>
+					<span class="foo bar">2022年1月2日</span>`)
+			).html
+		).toBe(`
+					<span>2022年1月2日</span>
+					<span class="foo bar">2022年1月2日</span>`);
+	});
 	test('空文字', async () => {
 		expect((await posthtml([posthtmlTimeJapaneseDate({ element: 'span', class: 'japanese-date' })]).process('<span class="japanese-date"></span>')).html).toBe(
 			'<span></span>'

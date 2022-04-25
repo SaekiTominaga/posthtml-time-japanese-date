@@ -1,4 +1,5 @@
 import * as PostHTML from 'posthtml';
+import PostHTMLMatchClass from '@saekitominaga/posthtml-match-class';
 
 interface Options {
 	readonly element: string;
@@ -11,48 +12,14 @@ export default (options: Options) => {
 		class: options.class,
 	};
 
-	/**
-	 * Narrowing by class name
-	 *
-	 * <p class="foo bar"> → <p class="foo bar"> (return false)
-	 * <p class="foo TARGET bar"> → <p class="foo bar"> (return true)
-	 *
-	 * @param {object} node - Target node
-	 * @param {string} targetClassName - Searches if the target node contains this class name
-	 *
-	 * @returns {boolean} Whether the target node contains the specified class name
-	 */
-	const narrowingClass = (node: PostHTML.Node, targetClassName?: string): boolean => {
-		if (targetClassName === undefined) {
-			return true;
-		}
-
-		const attrs = node.attrs;
-
-		if (attrs?.class === undefined) {
-			/* class 属性がない場合 */
-			return false;
-		}
-
-		const classList = attrs.class.trim().split(/[\t\n\f\r ]+/g);
-		if (!classList.includes(targetClassName)) {
-			/* 当該クラス名がない場合 */
-			return false;
-		}
-
-		/* 指定されたクラス名を除去した上で変換する */
-		const newClass = classList.filter((className) => className !== targetClassName && className !== '').join(' ');
-		attrs.class = newClass !== '' ? newClass : undefined;
-
-		return true;
-	};
-
 	return (tree: PostHTML.Node): PostHTML.Node => {
 		tree.match({ tag: targetElementInfo.element }, (node) => {
 			const content = node.content;
 			const attrs = node.attrs ?? {};
 
-			if (!narrowingClass(node, targetElementInfo.class)) {
+			const postHTMLMatchClass = new PostHTMLMatchClass(node);
+
+			if (targetElementInfo.class !== undefined && !postHTMLMatchClass.refine(targetElementInfo.class)) {
 				return node;
 			}
 
