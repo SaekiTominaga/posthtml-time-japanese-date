@@ -1,5 +1,6 @@
-import posthtml = require('posthtml');
-import posthtmlTimeJapaneseDate from '../src';
+import posthtmlTimeJapaneseDate from '../dist/index.js';
+import posthtml from 'posthtml';
+import { describe, expect, test } from '@jest/globals';
 
 describe('正常系', () => {
 	test('年月日', async () => {
